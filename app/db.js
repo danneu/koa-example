@@ -30,22 +30,6 @@ function *query(sql, params) {
   }
 }
 
-// Like query but returns the full result instead of result.rows
-function *execute(sql, params) {
-  try {
-    var conn = yield pg.connect_(conn_url);
-    var client = conn[0];
-    var done = conn[1];
-
-    var result = yield client.query_(sql, params);
-    done();  // Release client back to pool
-
-    return result.rows;
-  } catch(ex) {
-    console.error(ex.toString());
-  }
-}
-
 ////////////////////////////////////////////////////////////
 
 exports.find_users = function *() {
