@@ -12,13 +12,46 @@ I heard about Koa yesterday and attempted to put together a basic app. Written i
 
 I don't have a strong Node/Javascript background or grasp of Koa/co/generators.
 
-I've gained much more experience with Koa since I wrote this project. One of the
-changes I'd make if I redid this is to use the
-[koa-pg](https://www.npmjs.org/package/koa-pg) middleware to add a pooled
+## Things I'd do differently next time
+
+I've gained much more experience with Koa since I wrote this project. Here are
+things I've done on Koa projects I've made since this one.
+
+#### `Use koa-pg`
+
+Use [koa-pg](https://www.npmjs.org/package/koa-pg) middleware to add a pooled
 database connection to each request which will be available to each route via
-`this.pg.db.client`. Then I'd rewrite my db namespace functions to take a
+`this.pg.db.client`. 
+
+Then I'd rewrite my db namespace functions to take a
 `client` as their first argument and query the db with `client.query_(<sql>,
 [args])`.
+
+#### Use `multiline`
+
+Remove my `sql/*.sql` files and embed the sql directly into my db namespace
+functions. It's too annoying having to juggle buffers just to see and make
+trivial changes to my sql. [multiline](https://www.npmjs.org/package/multiline) is a great hack to allow multiline strings.
+
+Example:
+
+      exports.find_user = function *find_user(client, user_id) {
+        var sql = multiline(function(){/*
+    SELECT * FROM users
+    WHERE id = $1
+        */});
+        var result = yield client.query_(sql, [user_id]);
+        return result.rows[0];
+      }
+
+      exports.find_users = function *find_users(client) {
+        var sql = multiline(function(){/*
+    SELECT * FROM users
+    ORDER BY username
+        */});
+        var result = yield client.query_(sql);
+        return result.rows;
+      }
 
 ## Setup
 
