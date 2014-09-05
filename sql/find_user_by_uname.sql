@@ -1,3 +1,3 @@
 SELECT *
 FROM users
-WHERE uname ILIKE $1;
+WHERE lower(uname) = lower($1);
