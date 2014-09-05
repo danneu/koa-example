@@ -12,6 +12,14 @@ I heard about Koa yesterday and attempted to put together a basic app. Written i
 
 I don't have a strong Node/Javascript background or grasp of Koa/co/generators.
 
+I've gained much more experience with Koa since I wrote this project. One of the
+changes I'd make if I redid this is to use the
+[koa-pg](https://www.npmjs.org/package/koa-pg) middleware to add a pooled
+database connection to each request which will be available to each route via
+`this.pg.db.client`. Then I'd rewrite my db namespace functions to take a
+`client` as their first argument and query the db with `client.query_(<sql>,
+[args])`.
+
 ## Setup
 
 1. Install Node v0.11.x. I just went `brew install nvm`, `nvm install v0.11.x`, and `nvm use 0.11`.
